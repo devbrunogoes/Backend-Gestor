@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Build with Maven
+        run: |
+          mvn -B -DskipTests package
+      - name: Run tests
+        run: |
+          mvn -B test
+# Multi-stage build for Spring Boot (Java 21)
+FROM maven:3.9.8-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
+# Use dev profile for a faster local build; tests can run in CI
+RUN mvn -B -DskipTests package
+
+FROM eclipse-temurin:21-jre
+WORKDIR /opt/app
+COPY --from=build /app/target/backend-gestor-1.0-SNAPSHOT.jar app.jar
+# Default: prod profile; configure via env if needed
+ENV SPRING_PROFILES_ACTIVE=prod
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/opt/app/app.jar"]
+
