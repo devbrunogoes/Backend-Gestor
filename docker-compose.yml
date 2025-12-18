@@ -24,7 +24,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: dv
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: 8080
       DATABASE_URL: jdbc:postgresql://db:5432/sistema_gestor
       DATABASE_USERNAME: postgres
