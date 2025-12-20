@@ -51,11 +51,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Flyway (PG 18 support) -->
+        <!-- Flyway (PG 18.1 support) -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>11.0.0</version>
+            <version>11.2.0</version>
         </dependency>
 
         <!-- Validação (opcional, mas recomendado) -->
